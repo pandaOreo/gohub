@@ -22,7 +22,7 @@ func main() {
 	r.Use(gin.Logger(), gin.Recovery())
 
 	// 注册一个路由
-	r.GET("/", func(c *gin.Context) {
+	r.NoRoute(func(c *gin.Context) {
 		// 获取标头信息的 Accept 信息
 		acceptString := c.Request.Header.Get("Accept")
 		if strings.Contains(acceptString, "text/html") {
