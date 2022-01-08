@@ -38,7 +38,7 @@ func (sc *SignupController) IsPhoneExist(c *gin.Context) {
 		})
 		// 打印错误信息
 		fmt.Println(err.Error())
-		// 出错了,中断请求
+		// 出错了,中断请求;
 		return
 	}
 
