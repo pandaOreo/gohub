@@ -1,42 +1,31 @@
 /**
- * @Author: fanjinghua
- * @Description:
- * @File: main
- * @Version: 1.0.0
- * @Date: 2022/1/7 17:52
+ * @Author       : Jinghua Fan
+ * @Date         : 2022-01-08 08:59:14
+ * @LastEditors  : Jinghua Fan
+ * @LastEditTime : 2022-01-08 14:52:25
+ * @Description  : 佛祖保佑,永无BUG
  */
 
 package main
 
 import (
+	"fmt"
+
+	"github.com/ZimoBoy/gohub/bootstrap"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"strings"
 )
 
 func main() {
 	// new 一个 GIN Engine 实例
 	r := gin.New()
 
-	// 注册中间键
-	r.Use(gin.Logger(), gin.Recovery())
-
-	// 注册一个路由
-	r.NoRoute(func(c *gin.Context) {
-		// 获取标头信息的 Accept 信息
-		acceptString := c.Request.Header.Get("Accept")
-		if strings.Contains(acceptString, "text/html") {
-			// 如果是html的话
-			c.String(http.StatusNotFound, "页面返回404")
-		} else {
-			// 默认返回 json
-			c.JSON(http.StatusNotFound, gin.H{
-				"error_code":    404,
-				"error_message": "路由未定义, 请确认 url 和请求方法是否正确",
-			})
-		}
-	})
+	// 初始化路由绑定
+	bootstrap.SetupRoute(r)
 
 	// 运行服务
-	r.Run(":8000")
+	err := r.Run(":8000")
+	if err != nil {
+		// 错误处理, 端口被占用了或者其他错误
+		fmt.Println(err.Error())
+	}
 }
