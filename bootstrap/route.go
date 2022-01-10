@@ -1,14 +1,3 @@
-// Package bootstrap 处理程序初始化逻辑
-package bootstrap
-
-import (
-	"net/http"
-	"strings"
-
-	"github.com/ZimoBoy/gohub/routes"
-	"github.com/gin-gonic/gin"
-)
-
 /**
  * @Author       : Jinghua Fan
  * @Date         : 2022-01-08 14:42:18
@@ -16,6 +5,18 @@ import (
  * @LastEditTime : 2022-01-08 14:42:27
  * @Description  : 佛祖保佑,永无BUG
  */
+
+// Package bootstrap 处理程序初始化逻辑
+package bootstrap
+
+import (
+	"github.com/ZimoBoy/gohub/app/http/middlewares"
+	"net/http"
+	"strings"
+
+	"github.com/ZimoBoy/gohub/routes"
+	"github.com/gin-gonic/gin"
+)
 
 func SetupRoute(router *gin.Engine) {
 
@@ -31,7 +32,7 @@ func SetupRoute(router *gin.Engine) {
 
 func registerGlobalMiddleWare(router *gin.Engine) {
 	router.Use(
-		gin.Logger(),
+		middlewares.Logger(),
 		gin.Recovery(),
 	)
 }
