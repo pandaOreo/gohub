@@ -13,8 +13,8 @@ import (
 	v1 "github.com/ZimoBoy/gohub/app/http/controllers/api/v1"
 	"github.com/ZimoBoy/gohub/app/models/user"
 	"github.com/ZimoBoy/gohub/app/requests"
+	"github.com/ZimoBoy/gohub/pkg/response"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // SignupController 注册控制器
@@ -23,7 +23,6 @@ type SignupController struct {
 }
 
 func (sc *SignupController) IsPhoneExist(c *gin.Context) {
-
 	// 获取请求参数,并做表单验证
 	request := requests.SignupPhoneExistRequest{}
 	if ok := requests.Validate(c, &request, requests.ValidatePhoneExist); !ok {
@@ -31,7 +30,7 @@ func (sc *SignupController) IsPhoneExist(c *gin.Context) {
 	}
 
 	// 检查数据库并返回响应
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"exist": user.IsPhoneExist(request.Phone),
 	})
 }
@@ -44,7 +43,7 @@ func (sc *SignupController) IsEmailExist(c *gin.Context) {
 	}
 
 	// 检查数据库并返回响应
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"exist": user.IsEmailExist(request.Email),
 	})
 }
