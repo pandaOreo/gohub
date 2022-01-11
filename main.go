@@ -11,7 +11,6 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"github.com/ZimoBoy/gohub/bootstrap"
 	btsConfig "github.com/ZimoBoy/gohub/config"
 	"github.com/ZimoBoy/gohub/pkg/config"
