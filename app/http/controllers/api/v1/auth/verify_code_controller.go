@@ -10,9 +10,11 @@ package auth
 
 import (
 	v1 "github.com/ZimoBoy/gohub/app/http/controllers/api/v1"
+	"github.com/ZimoBoy/gohub/app/requests"
 	"github.com/ZimoBoy/gohub/pkg/captcha"
 	"github.com/ZimoBoy/gohub/pkg/logger"
 	"github.com/ZimoBoy/gohub/pkg/response"
+	"github.com/ZimoBoy/gohub/pkg/verifycode"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,4 +34,19 @@ func (vc *VerifyCodeController) ShowCaptcha(c *gin.Context) {
 		"captcha_id":    id,
 		"captcha_image": b64s,
 	})
+}
+
+func (vc *VerifyCodeController) SendUsinngPhone(c *gin.Context) {
+	// 1. 验证表单
+	request := requests.VerifyCodePhoneRequest{}
+
+	if ok := requests.Validate(c, &request, requests.VerifyCodePhone); !ok {
+		return
+	}
+	// 2. 发送 SMS
+	if ok := verifycode.NewVerifyCode().SendSMS(request.Phone); !ok {
+		response.Abort500(c, "发送短信失败")
+	} else {
+		response.Success(c)
+	}
 }
