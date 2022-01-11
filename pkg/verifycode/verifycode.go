@@ -10,10 +10,12 @@
 package verifycode
 
 import (
+	"fmt"
 	"github.com/ZimoBoy/gohub/pkg/app"
 	"github.com/ZimoBoy/gohub/pkg/config"
 	"github.com/ZimoBoy/gohub/pkg/helpers"
 	"github.com/ZimoBoy/gohub/pkg/logger"
+	"github.com/ZimoBoy/gohub/pkg/mail"
 	"github.com/ZimoBoy/gohub/pkg/redis"
 	"github.com/ZimoBoy/gohub/pkg/sms"
 	"strings"
@@ -58,6 +60,32 @@ func (vc *VerifyCode) SendSMS(phone string) bool {
 		Template: config.GetString("sms.aliyun.template_code"),
 		Data:     map[string]string{"code": code},
 	})
+}
+
+// SendEmail 发送邮箱验证码, 调用示例:
+// 		verifycode.NewVerifyCode().SendMail(request.Email)
+func (vc *VerifyCode) SendEmail(email string) error {
+	// 生成验证码
+	code := vc.generateVerifyCode(email)
+
+	// 方便本地和 API 自动测试
+	if !app.IsProduction() && strings.HasSuffix(email, config.GetString("verifycode.debug_email_suffix")) {
+		return nil
+	}
+
+	content := fmt.Sprintf("<h1>您的 Email 验证码是 %v </h1>", code)
+
+	// 发送邮件
+	mail.NewMailer().Send(mail.Email{
+		From: mail.From{
+			Address: config.GetString("mail.from.address"),
+			Name:    config.GetString("mail.from.name"),
+		},
+		To:      []string{email},
+		Subject: "Email 验证码",
+		HTML:    []byte(content),
+	})
+	return nil
 }
 
 // CheckAnswer 检查用户提交的验证码是否正确, key 可以是手机号或者 Email
