@@ -22,6 +22,7 @@ type PasswordController struct {
 	v1.BaseApiController
 }
 
+// ResetByPhone 使用手机号重置密码
 func (pc *PasswordController) ResetByPhone(c *gin.Context) {
 	// 1. 验证表单
 	request := requests.ResetByPhoneRequest{}
@@ -31,6 +32,26 @@ func (pc *PasswordController) ResetByPhone(c *gin.Context) {
 
 	// 2. 更新密码
 	_user := user.GetByPhone(request.Phone)
+	if _user.ID == 0 {
+		response.Abort404(c)
+	} else {
+		_user.Password = request.Password
+		_user.Save()
+		response.Success(c)
+	}
+}
+
+// ResetByEmail 使用邮箱重置密码
+func (pc *PasswordController) ResetByEmail(c *gin.Context) {
+
+	// 1. 验证表单
+	request := requests.ResetByEmailRequest{}
+	if ok := requests.Validate(c, &request, requests.ResetByEmail); !ok {
+		return
+	}
+
+	// 2. 更新密码
+	_user := user.GetByEmail(request.Email)
 	if _user.ID == 0 {
 		response.Abort404(c)
 	} else {

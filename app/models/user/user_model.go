@@ -36,6 +36,7 @@ func (u *User) ComparePassword(_password string) bool {
 	return hash.BcryptCheck(_password, u.Password)
 }
 
+// Save 保存
 func (u *User) Save() (rowsAffected int64) {
 	result := database.DB.Save(&u)
 	return result.RowsAffected
