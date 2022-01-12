@@ -4,7 +4,7 @@ package routes
  * @Author       : Jinghua Fan
  * @Date         : 2022-01-08 14:47:22
  * @LastEditors  : Jinghua Fan
- * @LastEditTime : 2022-01-08 14:49:10
+ * @LastEditTime : 2022-01-12 20:03:36
  * @Description  : 佛祖保佑,永无BUG
  */
 
@@ -43,6 +43,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			lgc := new(auth.LoginController)
 			// 使用手机号,短信验证码进行登录
 			authGroup.POST("/login/using-phone", lgc.LoginByPhone)
+			authGroup.POST("/login/using-password", lgc.LoginByPassword)
 		}
 	}
 }
