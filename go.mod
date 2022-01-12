@@ -16,7 +16,10 @@ require (
 	gorm.io/gorm v1.22.4
 )
 
-require github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
+require (
+	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
+	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+)
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -50,7 +53,6 @@ require (
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect
 	golang.org/x/sys v0.0.0-20211210111614-af8b64212486 // indirect
 	golang.org/x/text v0.3.7 // indirect
