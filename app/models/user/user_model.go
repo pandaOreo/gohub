@@ -8,7 +8,10 @@
 
 package user
 
-import "github.com/ZimoBoy/gohub/app/models"
+import (
+	"github.com/ZimoBoy/gohub/app/models"
+	"github.com/ZimoBoy/gohub/pkg/database"
+)
 
 // User 用户模型
 type User struct {
@@ -20,4 +23,9 @@ type User struct {
 	Password string `json:"-"`
 
 	models.CommonTimestampsField
+}
+
+// Create 创建用户,通过 User.ID 来判断是否创建成功
+func (u *User) Create() {
+	database.DB.Create(&u)
 }
