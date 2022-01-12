@@ -12,6 +12,8 @@ package auth
 import (
 	"errors"
 	"github.com/ZimoBoy/gohub/app/models/user"
+	"github.com/ZimoBoy/gohub/pkg/logger"
+	"github.com/gin-gonic/gin"
 )
 
 // Attempt 尝试登录
@@ -33,4 +35,20 @@ func LoginByPhone(phone string) (user.User, error) {
 		return user.User{}, errors.New("手机号未注册")
 	}
 	return userModel, nil
+}
+
+// CurrentUser 从 gin.Context 中获取当前 的登录用户
+func CurrentUser(c *gin.Context) user.User {
+	_user, ok := c.MustGet("current_user").(user.User)
+	if !ok {
+		logger.LogIf(errors.New("无法获取用户"))
+		return user.User{}
+	}
+	// db is now a *DB value
+	return _user
+}
+
+// CurrentUID 从 gin.Context 中获取当前登录用户 ID
+func CurrentUID(c *gin.Context) string {
+	return c.GetString("current_user_id")
 }
