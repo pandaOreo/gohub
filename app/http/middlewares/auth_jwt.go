@@ -11,6 +11,7 @@ package middlewares
 
 import (
 	"fmt"
+	"github.com/ZimoBoy/gohub/app/models/user"
 	"github.com/ZimoBoy/gohub/pkg/config"
 	"github.com/ZimoBoy/gohub/pkg/jwt"
 	"github.com/ZimoBoy/gohub/pkg/response"
@@ -20,7 +21,7 @@ import (
 func AuthJTW() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		// 从标头 Authorization:Bearer xxxxxxx 中获取信息,并验证 JWT 的准确性
+		// 从标头 Authorization:Bearer xxxx 中获取信息,并验证 JWT 的准确性
 		claims, err := jwt.NewJWT().ParseToken(c)
 
 		// JWT 解析失败, 有错误信息
@@ -31,7 +32,7 @@ func AuthJTW() gin.HandlerFunc {
 
 		// JWT 解析成功,设置用户信息
 		_user := user.Get(claims.UserID)
-		if _user.Id == 0 {
+		if _user.ID == 0 {
 			response.Unauthorized(c, "找不到对应用户,用户可能已删除")
 			return
 		}
