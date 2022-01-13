@@ -1,11 +1,3 @@
-/**
- * @Author: fanjinghua
- * @Description:
- * @File: make
- * @Version: 1.0.0
- * @Date: 2022/1/13 11:09
- */
-
 // Package make 命令行的 make 命令
 package make
 
@@ -15,9 +7,10 @@ import (
 	"github.com/ZimoBoy/gohub/pkg/console"
 	"github.com/ZimoBoy/gohub/pkg/file"
 	"github.com/ZimoBoy/gohub/pkg/str"
+	"strings"
+
 	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 // Model 参数解释
@@ -61,7 +54,7 @@ type Model struct {
 
 // stubsFS 方便我们后面打包这些 .stub 为后缀名的文件
 
-// go:embed stubs
+//go:embed stub
 var stubsFS embed.FS
 
 // CmdMake 说明 cobra 命令
@@ -92,6 +85,7 @@ func makeModelFromString(name string) Model {
 // createFileFromStub 读取 stub 文件并进行变量替换
 // 最后一个选项可选，如若传参，应传 map[string]string 类型，作为附加的变量搜索替换
 func createFileFromStub(filePath string, stubName string, model Model, variables ...interface{}) {
+
 	// 实现最后一个参数可选
 	replaces := make(map[string]string)
 	if len(variables) > 0 {
@@ -104,7 +98,7 @@ func createFileFromStub(filePath string, stubName string, model Model, variables
 	}
 
 	// 读取 stub 模板文件
-	modelData, err := stubsFS.ReadFile("stubs/" + stubName + ".stub")
+	modelData, err := stubsFS.ReadFile("stub/" + stubName + ".stub")
 	if err != nil {
 		console.Exit(err.Error())
 	}
@@ -122,11 +116,13 @@ func createFileFromStub(filePath string, stubName string, model Model, variables
 	for search, replace := range replaces {
 		modelStub = strings.ReplaceAll(modelStub, search, replace)
 	}
+
 	// 存储到目标文件中
 	err = file.Put([]byte(modelStub), filePath)
 	if err != nil {
 		console.Exit(err.Error())
 	}
+
 	// 提示成功
 	console.Success(fmt.Sprintf("[%s] created.", filePath))
 }

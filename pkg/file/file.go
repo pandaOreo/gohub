@@ -1,11 +1,3 @@
-/**
- * @Author: fanjinghua
- * @Description:
- * @File: file
- * @Version: 1.0.0
- * @Date: 2022/1/13 11:38
- */
-
 // Package file 文件操作辅助函数
 package file
 
