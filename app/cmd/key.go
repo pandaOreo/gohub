@@ -15,7 +15,7 @@ import (
 )
 
 var CmdKey = &cobra.Command{
-	Use:   "Key",
+	Use:   "key",
 	Short: "Generate App Key, will print the generated key",
 	Run:   runKeyGenerate,
 	Args:  cobra.NoArgs,
