@@ -1,13 +1,3 @@
-package helpers
-
-import (
-	"crypto/rand"
-	"fmt"
-	"io"
-	"reflect"
-	"time"
-)
-
 /**
  * @Author       : Jinghua Fan
  * @Date         : 2022-01-08 15:28:51
@@ -15,6 +5,17 @@ import (
  * @LastEditTime : 2022-01-08 15:28:59
  * @Description  : 佛祖保佑,永无BUG
  */
+
+package helpers
+
+import (
+	"crypto/rand"
+	"fmt"
+	"io"
+	mathrand "math/rand"
+	"reflect"
+	"time"
+)
 
 // Empty 类似于 PHP 的 empty() 函数
 func Empty(val interface{}) bool {
@@ -69,4 +70,15 @@ func FirstElement(args []string) string {
 		return args[0]
 	}
 	return ""
+}
+
+// RandomString 生成长度为 length 的随机字符串
+func RandomString(length int) string {
+	mathrand.Seed(time.Now().UnixNano())
+	letters := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = letters[mathrand.Intn(len(letters))]
+	}
+	return string(b)
 }
