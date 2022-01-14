@@ -15,20 +15,20 @@ import (
 )
 
 // migrationFunc 定义 up 和 down 回调方法的类型
-type MigrationFunc func(gorm.Migrator, *sql.DB)
+type migrationFunc func(gorm.Migrator, *sql.DB)
 
 // migrationFiles 所有的迁移文件数组
 var migrationFiles []MigrationFile
 
 // MigrationFile 代表着带个迁移文件
 type MigrationFile struct {
-	Up       MigrationFunc
-	Down     MigrationFunc
+	Up       migrationFunc
+	Down     migrationFunc
 	FileName string
 }
 
 // Add 新增一个迁移文件, 所有的迁移文件都需要调用此方法来注册
-func Add(name string, up MigrationFunc, down MigrationFunc) {
+func Add(name string, up migrationFunc, down migrationFunc) {
 	migrationFiles = append(migrationFiles, MigrationFile{
 		FileName: name,
 		Up:       up,
@@ -47,7 +47,7 @@ func getMigrationFile(name string) MigrationFile {
 }
 
 // isNotMigrated 判断迁移是否已执行
-func (mfile MigrationFile) IsNotMigrated(migrations []Migration) bool {
+func (mfile MigrationFile) isNotMigrated(migrations []Migration) bool {
 	for _, migration := range migrations {
 		if migration.Migration == mfile.FileName {
 			return false

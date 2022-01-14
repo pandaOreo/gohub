@@ -38,40 +38,42 @@ func NewMigrator() *Migrator {
 		DB:       database.DB,
 		Migrator: database.DB.Migrator(),
 	}
-	// migrations 不存在的话就创建他
+	// migrations 不存在的话就创建它
 	migrator.createMigrationsTable()
 	return migrator
 }
 
 // createMigrationsTable 创建迁移表
-func (m *Migrator) createMigrationsTable() {
+func (migrator *Migrator) createMigrationsTable() {
 	migration := Migrator{}
-
 	// 不存在才创建
-	if !m.Migrator.HasTable(&migration) {
-		m.Migrator.CreateTable(&migration)
+	if !migrator.Migrator.HasTable(&migration) {
+		migrator.Migrator.CreateTable(&migration)
 	}
 }
 
-func (m *Migrator) Up() {
-	// 读取所有迁移文件, 确保按照时间排序
-	migrateFiles := m.readAllMigrationFiles()
+// Up 执行所有未迁移过的文件
+func (migrator *Migrator) Up() {
 
-	// 读取当前批次的值
-	batch := m.getBatch()
+	// 读取所有迁移文件，确保按照时间排序
+	migrateFiles := migrator.readAllMigrationFiles()
+
+	// 获取当前批次的值
+	batch := migrator.getBatch()
 
 	// 获取所有迁移数据
 	migrations := []Migration{}
-	m.DB.Find(&migrations)
+	migrator.DB.Find(&migrations)
 
 	// 可以通过此值来判断数据库是否已是最新
 	runed := false
 
-	// 对迁移文件进行遍历,如果没有执行过,就执行 up 回调
+	// 对迁移文件进行遍历，如果没有执行过，就执行 up 回调
 	for _, mfile := range migrateFiles {
-		// 对比文件名称,看是否已经运行过
+
+		// 对比文件名称，看是否已经运行过
 		if mfile.isNotMigrated(migrations) {
-			m.runUpMigration(mfile, batch)
+			migrator.runUpMigration(mfile, batch)
 			runed = true
 		}
 	}
@@ -81,26 +83,29 @@ func (m *Migrator) Up() {
 	}
 }
 
-// getBatch 获取当前这个批次的值
-func (m *Migrator) getBatch() int {
-	// 默认为1
-	batch := 1
-	// 去最后执行的一条迁移数据
-	lastMigration := Migration{}
-	m.DB.Order("id DESC").First(&lastMigration)
+// 获取当前这个批次的值
+func (migrator *Migrator) getBatch() int {
 
-	// 如果有值的话,加一
+	// 默认为 1
+	batch := 1
+
+	// 取最后执行的一条迁移数据
+	lastMigration := Migration{}
+	migrator.DB.Order("id DESC").First(&lastMigration)
+
+	// 如果有值的话，加一
 	if lastMigration.ID > 0 {
 		batch = lastMigration.Batch + 1
 	}
 	return batch
 }
 
-// readAllMigrationFiles 从文件目录读取文件,保证正确的时间排序
-func (m *Migrator) readAllMigrationFiles() []MigrationFile {
+// 从文件目录读取文件，保证正确的时间排序
+func (migrator *Migrator) readAllMigrationFiles() []MigrationFile {
+
 	// 读取 database/migrations/ 目录下的所有文件
 	// 默认是会按照文件名称进行排序
-	files, err := ioutil.ReadDir(m.Folder)
+	files, err := ioutil.ReadDir(migrator.Folder)
 	console.ExitIf(err)
 
 	var migrateFiles []MigrationFile
@@ -123,7 +128,7 @@ func (m *Migrator) readAllMigrationFiles() []MigrationFile {
 }
 
 // 执行迁移，执行迁移的 up 方法
-func (m *Migrator) runUpMigration(mfile MigrationFile, batch int) {
+func (migrator *Migrator) runUpMigration(mfile MigrationFile, batch int) {
 
 	// 执行 up 区块的 SQL
 	if mfile.Up != nil {
@@ -136,6 +141,6 @@ func (m *Migrator) runUpMigration(mfile MigrationFile, batch int) {
 	}
 
 	// 入库
-	err := m.DB.Create(&Migration{Migration: mfile.FileName, Batch: batch}).Error
+	err := migrator.DB.Create(&Migration{Migration: mfile.FileName, Batch: batch}).Error
 	console.ExitIf(err)
 }

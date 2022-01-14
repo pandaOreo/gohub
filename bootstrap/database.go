@@ -11,7 +11,6 @@ package bootstrap
 import (
 	"errors"
 	"fmt"
-	"github.com/ZimoBoy/gohub/app/models/user"
 	"github.com/ZimoBoy/gohub/pkg/config"
 	"github.com/ZimoBoy/gohub/pkg/database"
 	"github.com/ZimoBoy/gohub/pkg/logger"
@@ -56,5 +55,5 @@ func SetupDB() {
 	// 设置每个链接的过期时间
 	database.SQLDB.SetConnMaxLifetime(time.Duration(config.GetInt("database.mysql.max_life_seconds")) * time.Second)
 
-	database.DB.AutoMigrate(&user.User{})
+	//database.DB.AutoMigrate(&user.User{})
 }

@@ -9,14 +9,14 @@
 package cmd
 
 import (
-	"github.com/ZimoBoy/gohub/migrations"
+	"github.com/ZimoBoy/gohub/database/migrations"
 	"github.com/ZimoBoy/gohub/pkg/migrate"
 	"github.com/spf13/cobra"
 )
 
 var CmdMigrate = &cobra.Command{
 	Use:   "migrate",
-	Short: "Run unmigrated migrations",
+	Short: "Run database migration",
 	// 所有 migrate 下的子命令都会执行以下代码
 }
 
