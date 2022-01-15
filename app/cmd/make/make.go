@@ -71,7 +71,8 @@ func init() {
 		CmdMakeAPIController,
 		CmdMakeRequest,
 		CmdMakeMigration,
-		CMdMakeSeeder,
+		CmdMakeSeeder,
+		CmdMakeFactory,
 	)
 }
 

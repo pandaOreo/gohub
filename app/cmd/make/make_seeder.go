@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var CMdMakeSeeder = &cobra.Command{
+var CmdMakeSeeder = &cobra.Command{
 	Use:   "seeder",
 	Short: "Create seeder file, example: make seeder user",
 	Run:   runMakeSeeder,
