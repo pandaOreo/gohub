@@ -22,6 +22,7 @@ require (
 )
 
 require (
+	github.com/bxcodec/faker/v3 v3.7.0
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/iancoleman/strcase v0.2.0
