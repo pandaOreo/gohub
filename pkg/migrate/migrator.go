@@ -45,10 +45,10 @@ func NewMigrator() *Migrator {
 
 // createMigrationsTable 创建迁移表
 func (migrator *Migrator) createMigrationsTable() {
-	migration := Migrator{}
+	//migration := Migrator{}
 	// 不存在才创建
-	if !migrator.Migrator.HasTable(&migration) {
-		migrator.Migrator.CreateTable(&migration)
+	if !migrator.Migrator.HasTable(&Migration{}) {
+		migrator.Migrator.CreateTable(&Migration{})
 	}
 }
 
