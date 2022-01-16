@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/ZimoBoy/gohub/app/models/topic"
+	"github.com/ZimoBoy/gohub/app/policies"
 	"github.com/ZimoBoy/gohub/app/requests"
 	"github.com/ZimoBoy/gohub/pkg/auth"
 	"github.com/ZimoBoy/gohub/pkg/response"
@@ -56,6 +57,16 @@ func (ctrl *TopicsController) Update(c *gin.Context) {
 		return
 	}
 
+	if ok := policies.CanModifyTopic(c, topicModel); !ok {
+		response.Abort403(c)
+		return
+	}
+
+	if ok := policies.CanModifyTopic(c, topicModel); !ok {
+		response.Abort403(c)
+		return
+	}
+
 	request := requests.TopicRequest{}
 	if ok := requests.Validate(c, &request, requests.TopicSave); !ok {
 		return
@@ -79,12 +90,6 @@ func (ctrl *TopicsController) Delete(c *gin.Context) {
 		response.Abort404(c)
 		return
 	}
-
-	if ok := policies.CanModifyTopic(c, topicModel); !ok {
-		response.Abort403(c)
-		return
-	}
-
 	rowsAffected := topicModel.Delete()
 	if rowsAffected > 0 {
 		response.Success(c)
