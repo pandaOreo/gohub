@@ -5,10 +5,11 @@ import (
 	"github.com/ZimoBoy/gohub/pkg/database"
 	"github.com/ZimoBoy/gohub/pkg/paginator"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm/clause"
 )
 
 func Get(idstr string) (t Topic) {
-	database.DB.Where("id", idstr).First(&t)
+	database.DB.Preload(clause.Associations).Where("id", idstr).First(&t)
 	return
 }
 
