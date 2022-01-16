@@ -14,20 +14,6 @@ type TopicsController struct {
 	BaseApiController
 }
 
-func (ctrl *TopicsController) Index(c *gin.Context) {
-	topics := topic.All()
-	response.Data(c, topics)
-}
-
-func (ctrl *TopicsController) Show(c *gin.Context) {
-	topicModel := topic.Get(c.Param("id"))
-	if topicModel.ID == 0 {
-		response.Abort404(c)
-		return
-	}
-	response.Data(c, topicModel)
-}
-
 func (ctrl *TopicsController) Store(c *gin.Context) {
 
 	request := requests.TopicRequest{}
@@ -103,4 +89,16 @@ func (ctrl *TopicsController) Delete(c *gin.Context) {
 	}
 
 	response.Abort500(c, "删除失败，请稍后尝试~")
+}
+
+func (ctrl *TopicsController) Index(c *gin.Context) {
+	request := requests.PaginationRequest{}
+	if ok := requests.Validate(c, &request, requests.Pagination); !ok {
+		return
+	}
+	data, pager := topic.Paginate(c, 10)
+	response.JSON(c, gin.H{
+		"data":  data,
+		"pager": pager,
+	})
 }
