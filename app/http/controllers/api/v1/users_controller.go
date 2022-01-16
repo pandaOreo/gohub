@@ -4,6 +4,8 @@ import (
 	"github.com/ZimoBoy/gohub/app/models/user"
 	"github.com/ZimoBoy/gohub/app/requests"
 	"github.com/ZimoBoy/gohub/pkg/auth"
+	"github.com/ZimoBoy/gohub/pkg/config"
+	"github.com/ZimoBoy/gohub/pkg/file"
 	"github.com/ZimoBoy/gohub/pkg/response"
 	"github.com/gin-gonic/gin"
 )
@@ -99,4 +101,21 @@ func (ctrl *UsersController) UpdatePassword(c *gin.Context) {
 		currentUser.Save()
 		response.Success(c)
 	}
+}
+
+func (ctrl *UsersController) UpdateAvatar(c *gin.Context) {
+	request := requests.UserUpdateAvatarRequest{}
+	if ok := requests.Validate(c, &request, requests.UserUpdateAvatar); !ok {
+		return
+	}
+	avatar, err := file.SaveUploadAvatar(c, request.Avatar)
+	if err != nil {
+		response.Abort500(c, "上传你头像失败,请稍后尝试~")
+		return
+	}
+	currentUser := auth.CurrentUser(c)
+	currentUser.Avatar = config.GetString("app.url") + avatar
+	currentUser.Save()
+
+	response.Data(c, currentUser)
 }
