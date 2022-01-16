@@ -1,5 +1,5 @@
-//Package toopic 模型
-package toopic
+//Package topic 模型
+package topic
 
 import (
 	"github.com/ZimoBoy/gohub/app/models"
@@ -8,7 +8,7 @@ import (
 	"github.com/ZimoBoy/gohub/pkg/database"
 )
 
-type Toopic struct {
+type Topic struct {
 	models.BaseModel
 
 	// Put fields in here
@@ -26,16 +26,16 @@ type Toopic struct {
 	models.CommonTimestampsField
 }
 
-func (toopic *Toopic) Create() {
-	database.DB.Create(&toopic)
+func (t *Topic) Create() {
+	database.DB.Create(&t)
 }
 
-func (toopic *Toopic) Save() (rowsAffected int64) {
-	result := database.DB.Save(&toopic)
+func (t *Topic) Save() (rowsAffected int64) {
+	result := database.DB.Save(&t)
 	return result.RowsAffected
 }
 
-func (toopic *Toopic) Delete() (rowsAffected int64) {
-	result := database.DB.Delete(&toopic)
+func (t *Topic) Delete() (rowsAffected int64) {
+	result := database.DB.Delete(&t)
 	return result.RowsAffected
 }
