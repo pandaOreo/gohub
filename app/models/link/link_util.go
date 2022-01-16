@@ -2,9 +2,12 @@ package link
 
 import (
 	"github.com/ZimoBoy/gohub/pkg/app"
+	"github.com/ZimoBoy/gohub/pkg/cache"
 	"github.com/ZimoBoy/gohub/pkg/database"
+	"github.com/ZimoBoy/gohub/pkg/helpers"
 	"github.com/ZimoBoy/gohub/pkg/paginator"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func Get(idstr string) (link Link) {
@@ -36,5 +39,25 @@ func Paginate(c *gin.Context, perPage int) (links []Link, paging paginator.Pagin
 		app.V1URL(database.TableName(&Link{})),
 		perPage,
 	)
+	return
+}
+
+func AllCached() (links []Link) {
+	// 设置缓存 key
+	cacheKey := "links:all"
+	// 设置过期时间
+	expireTime := 120 * time.Minute
+	// 取数据
+	cache.GetObject(cacheKey, &links)
+
+	// 如果数据为空
+	if helpers.Empty(links) {
+		// 查询数据库
+		links = All()
+		if helpers.Empty(links) {
+			return links
+		}
+		cache.Set(cacheKey, links, expireTime)
+	}
 	return
 }
